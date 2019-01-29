@@ -1,8 +1,16 @@
 import Immutable  from 'immutable';
 import ActionsTypes from '../../constants/actionsType';
 
-export default function tickerReducer(state = Immutable.List(), action) {
+const initialState = Immutable.fromJS({
+  ticker: {},
+});
+
+export default function tickerReducer(state = initialState, action) {
   switch (action.type) {
+    case ActionsTypes.FETCH_TICKER:
+      return state;
+    case ActionsTypes.FETCH_TICKER_FULFILLED:      
+      return state.set('ticker',Immutable.fromJS(action.payload));
     default:
       return state;
   }

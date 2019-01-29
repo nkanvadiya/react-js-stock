@@ -10,7 +10,7 @@ class App extends React.Component {
         }
 
         componentWillMount() {
-             this.props.dispatch(fetchUsers( 1 ));
+             this.props.dispatch(fetchTicker());
         }
         
         render() {
@@ -21,7 +21,14 @@ class App extends React.Component {
         }
 }
 
+const mapStateToProps = (state) => {        
+        return {
+                ticker: state.getIn(["tickerReducers", "ticker" ])                
+        };
+        
+};
+
 export default connect(
-        null,
+        mapStateToProps,
         null
 )(App);

@@ -1,5 +1,7 @@
-import { createStore, compose, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
+import { createEpicMiddleware } from 'redux-observable';
+import { rootEpic } from './middleware/index';
 import { rootReducer } from './reducers/index';
 
 const loggerMiddleware = createLogger({ diff: true,
@@ -7,8 +9,12 @@ const loggerMiddleware = createLogger({ diff: true,
     collapsed: true
 });
 
+const epicMiddleware = createEpicMiddleware();
+
 const store = createStore(rootReducer,   
-    applyMiddleware(loggerMiddleware )
+    applyMiddleware(epicMiddleware, loggerMiddleware )
 );
+
+epicMiddleware.run(rootEpic);
 
 export default store;

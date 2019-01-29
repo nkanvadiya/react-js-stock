@@ -2,6 +2,8 @@ import * as React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/css/style.css";
 import { connect } from "react-redux";
+import uniqid from 'uniqid';
+import tickerRow from './components/tickerRow';
 
 class App extends React.Component {
 
@@ -16,6 +18,11 @@ class App extends React.Component {
         render() {
                 return (
                         <section>
+                        { 
+                                this.props.ticker.toJS().map( function( ticker ){
+                                        <tickerRow key={ uniqid() } ticker={ ticker } />
+                                }, this )
+                        }
                         </section>
                 );
         }
@@ -23,7 +30,8 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {        
         return {
-                ticker: state.getIn(["tickerReducers", "ticker" ])                
+                ticker: state.getIn(["tickerReducers", "ticker" ]),
+                history: state.getIn(["tickerReducers", "history" ]),
         };
         
 };

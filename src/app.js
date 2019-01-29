@@ -3,7 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/css/style.css";
 import { connect } from "react-redux";
 import uniqid from 'uniqid';
-import tickerRow from './components/tickerRow';
+import TickerList from './components/tickerList';
+import { fetchTicker } from './redux/middleware/ticker';
 
 class App extends React.Component {
 
@@ -18,11 +19,12 @@ class App extends React.Component {
         render() {
                 return (
                         <section>
-                        { 
-                                this.props.ticker.toJS().map( function( ticker ){
-                                        <tickerRow key={ uniqid() } ticker={ ticker } />
-                                }, this )
-                        }
+                                <div className="container">
+                                { this.props.ticker.count() === 0                                                   
+                                  ? ""
+                                  : <TickerList ticker ={this.props.ticker} history={this.props.history} /> 
+                                }
+                                </div>
                         </section>
                 );
         }

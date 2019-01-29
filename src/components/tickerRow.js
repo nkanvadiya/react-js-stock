@@ -1,12 +1,14 @@
-import React from 'react'
+import React from 'react';
 
 class tickerRow extends React.Component {
 
-   render() {    
+  render() {
+    const { ticker, history } = this.props;
+
     return (
       <tr >
-        <td>{ this.props.ticker }</td>
-        <td></td>
+        <td>{ ticker.name }</td>
+        <td>{ ticker.value }</td>
         <td></td>
       </tr>
     );

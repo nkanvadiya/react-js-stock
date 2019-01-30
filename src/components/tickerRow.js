@@ -43,7 +43,7 @@ class tickerRow extends React.Component {
         <td>{ ticker.name.toUpperCase() }</td>
         <td className={ this.getTickerValueColor( historyfilter, ticker ) } >{ ticker.value.toFixed(2) }</td>
         <td>{ this.getUpdatedAt( historyfilter, ticker ) != null ? <TimeAgo date={ this.getUpdatedAt( historyfilter, ticker ) } /> : "-" }</td>
-        <td> 
+        <td className={'graph-container'}> 
 
 
 <Sparklines data={ this.getGraphData(historyfilter) }>

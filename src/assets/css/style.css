@@ -7,3 +7,11 @@ body{
     border: 1px solid #dee2e6;
     background: #fff;
 }
+
+td.graph-container{
+    width: 200px;
+}
+svg{
+    height: 50px;
+}
+

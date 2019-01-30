@@ -11,7 +11,7 @@ export const fetchTicker = () => ({ type: ActionsTypes.FETCH_TICKER });
 export const fetchTickerFulfilled = payload => ({ type: ActionsTypes.FETCH_TICKER_FULFILLED, payload });
 
 const convertToReadableObject = ( arr ) => {
-    return _.chain(arr).map( o => { return { 'name' : o[0], 'value' : o[1] } }).value();
+    return _.chain(arr).map( o => { return { 'name' : o[0], 'value' : o[1], 'time' : Date.now() } }).value();
 };
 
 // epic

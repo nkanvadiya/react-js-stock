@@ -2,3 +2,8 @@ body{
     background-color: #dee0ff;
     padding: 25px;
 }
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+    background: #fff;
+}

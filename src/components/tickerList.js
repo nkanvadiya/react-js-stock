@@ -1,6 +1,5 @@
 import * as React from "react";
 import TickerRow from "./tickerRow";
-import PropTypes from 'prop-types';
 
 export default class tickerList extends React.Component {
     render() {

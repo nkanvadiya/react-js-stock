@@ -1,7 +1,8 @@
 import React from 'react';
 import { Sparklines, SparklinesLine, SparklinesReferenceLine } from 'react-sparklines';
 import _ from 'lodash';
-import TimeAgo from 'react-timeago'
+import TimeAgo from 'react-timeago';
+import PropTypes from 'prop-types';
 
 class tickerRow extends React.Component {
 
@@ -54,5 +55,10 @@ class tickerRow extends React.Component {
     );
   }
 }
+
+tickerRow.propTypes = {
+  ticker: PropTypes.object.isRequired,
+  history: PropTypes.array
+};
 
 export default tickerRow;

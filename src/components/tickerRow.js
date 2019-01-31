@@ -3,8 +3,26 @@ import { Sparklines, SparklinesLine, SparklinesReferenceLine } from 'react-spark
 import _ from 'lodash';
 import TimeAgo from 'react-timeago';
 import PropTypes from 'prop-types';
+import { Tooltip } from 'reactstrap';
+import { FaInfoCircle } from 'react-icons/fa';
 
 class tickerRow extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggleTooltip = this.toggleTooltip.bind(this);
+        
+    this.state = { 
+      updatedat: this.props.ticker.time,
+      tooltipOpen: false    
+    };
+  }
+
+  toggleTooltip(){
+    this.setState({
+      tooltipOpen: !this.state.tooltipOpen
+    });
+  }
 
   getTickerValueColor(historyfilter, ticker ) {
     let lastVal = historyfilter[0];
@@ -25,31 +43,93 @@ class tickerRow extends React.Component {
     return historyfilter.map(function (o) { return o.value; });
   }
 
-  getUpdatedAt( historyfilter, ticker ) {
-    let key =  _.findLastKey(historyfilter, function(o) { return o.time < ticker.time; });
-    if( key !== undefined ){
-      return historyfilter[ key ].time;
-    }else{
-      return null;
+  componentDidMount() { 
+    this.updatedatinterval = setInterval(() => {
+          this.setState({ updatedat: this.state.updatedat });
+      }, 1000); // every 1 seconds interval for time ago
+  }
+
+  componentWillReceiveProps(newProps) {         
+      if( newProps.ticker.time !== this.state.updatedat ){        
+        this.setState({ updatedat: newProps.ticker.time });  
+      }    
+  }
+
+  getDiffNumber(historyfilter, ticker) {
+    let openVal = historyfilter[0];
+    if( openVal !== undefined ){
+      if(ticker.value > openVal.value){
+        return <small>{'+' + ( ticker.value - openVal.value ).toFixed(2) }</small>;
+      }else if(ticker.value < openVal.value){
+        return <small>{( ticker.value - openVal.value ).toFixed(2) }</small>;
+      }
     }
+    return null;
+  }
+
+  getDiffPercentage(historyfilter, ticker ) {
+    let openVal = historyfilter[0];
+    if( openVal !== undefined ){
+      if(ticker.value > openVal.value){
+        return <small>{'+' + ( - ( ( openVal.value - ticker.value ) / openVal.value ) * 100 ).toFixed(2) + "%" }</small>;
+      }else if(ticker.value < openVal.value){
+        return <small>{'-' + ( ( ( openVal.value - ticker.value ) / openVal.value)  * 100 ).toFixed(2) + "%" }</small>;
+      }
+    }
+    return null;
+  }
+
+  getOpenStock( historyfilter ){
+    let openVal = historyfilter[0];
+    if( openVal !== undefined ){
+      return openVal.value.toFixed(2);
+    }
+    return "-";
+  }
+
+  getHighStock( historyfilter ){
+    return _.maxBy(historyfilter, 'value').value.toFixed(2);    
+  }
+
+  getLowStock( historyfilter ){
+    return _.minBy(historyfilter, 'value').value.toFixed(2);    
+  }
+
+  getAvgStock( historyfilter ){
+    return _.meanBy(historyfilter, 'value').toFixed(2);
   }
 
   render() {
     const { ticker, history } = this.props;
+    const { updatedat } = this.state;
     let historyfilter = _.chain(history).flatten().filter({ name: ticker.name }).value();
 
     return (
       <tr >
         <td>{ ticker.name.toUpperCase() }</td>
-        <td className={ this.getTickerValueColor( historyfilter, ticker ) } >{ ticker.value.toFixed(2) }</td>
-        <td>{ this.getUpdatedAt( historyfilter, ticker ) != null ? <TimeAgo date={ this.getUpdatedAt( historyfilter, ticker ) } /> : "-" }</td>
-        <td className={'graph-container'}> 
+        <td className={ this.getTickerValueColor( historyfilter, ticker ) + " value-container" } >
+            <big>{ ticker.value.toFixed(2) }</big>
+            { this.getDiffNumber(historyfilter, ticker) }
+            { this.getDiffPercentage(historyfilter, ticker) }
 
-
-<Sparklines data={ this.getGraphData(historyfilter) }>
-    <SparklinesLine />
-    <SparklinesReferenceLine type="avg" />
-</Sparklines>
+            <span id={'tooltipid'+ticker.name} ><FaInfoCircle /></span>
+            <Tooltip placement="right" isOpen={this.state.tooltipOpen} target={'tooltipid'+ticker.name} toggle={this.toggleTooltip}>
+              Open : { this.getOpenStock(historyfilter) }<br/>
+              High : { this.getHighStock(historyfilter) }<br/>
+              Avg : { this.getAvgStock(historyfilter) }<br />
+              Low : { this.getLowStock(historyfilter) }
+            </Tooltip>        
+        </td>
+        <td>{ 
+          //check if diifernce is greater than 1
+          (( (new Date().getTime()) - (new Date( updatedat ).getTime()) ) / 1000 ) > 1 
+          ? <TimeAgo date= { updatedat } /> 
+          : "a moment ago" }</td>
+        <td className={'graph-container'}>
+          <Sparklines data={ this.getGraphData(historyfilter) }>
+              <SparklinesLine />
+              <SparklinesReferenceLine type="avg" />
+          </Sparklines>
         </td>
       </tr>
     );

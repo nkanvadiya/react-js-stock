@@ -2,9 +2,9 @@ import * as React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./assets/css/style.css";
 import { connect } from "react-redux";
-import uniqid from 'uniqid';
 import TickerList from './components/tickerList';
 import { fetchTicker } from './redux/middleware/ticker';
+import { Spinner } from 'reactstrap';
 
 class App extends React.Component {
 
@@ -21,7 +21,7 @@ class App extends React.Component {
                         <section>
                                 <div className="container">
                                 { this.props.ticker.count() === 0                                                   
-                                  ? ""
+                                  ? <center><Spinner color="danger" /></center>
                                   : <TickerList ticker ={this.props.ticker} history={this.props.history} /> 
                                 }
                                 </div>

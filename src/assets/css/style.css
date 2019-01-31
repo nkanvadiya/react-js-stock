@@ -8,9 +8,16 @@ body{
     background: #fff;
 }
 
+td, 
 td.graph-container{
     width: 200px;
 }
+
+td.value-container big,
+td.value-container small{
+    margin-right: 10px;
+}
+
 svg{
     height: 50px;
 }

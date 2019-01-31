@@ -5,7 +5,7 @@ import { rootEpic } from './middleware/index';
 import { rootReducer } from './reducers/index';
 
 const loggerMiddleware = createLogger({ diff: true,
-    predicate: () => process.env.NODE_ENV !== 'development',
+    predicate: () => process.env.NODE_ENV === 'development',
     collapsed: true
 });
 

@@ -2,7 +2,7 @@ import { mergeMap } from 'rxjs/operators';
 import { ofType } from 'redux-observable';
 import ActionsTypes from '../../constants/actionsType';
 import { webSocket } from 'rxjs/webSocket'; 
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
 import _ from 'lodash';
 
 let socket$ = webSocket("ws://stocks.mnet.website");
@@ -18,7 +18,7 @@ const convertToReadableObject = ( arr ) => {
 export const fetchTickerEpic = action$ => action$.pipe(
     ofType(ActionsTypes.FETCH_TICKER),
     mergeMap(action =>
-        socket$.map( response => fetchTickerFulfilled( convertToReadableObject( response ) ) )
+        socket$.pipe( map( response => fetchTickerFulfilled( convertToReadableObject( response ) ) ) )
     )
   );
 
